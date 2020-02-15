@@ -1,15 +1,18 @@
 # Darko
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/Darko`. To experiment with that code, run `bin/console` for an interactive prompt.
+## 28:06:42:12 
 
-TODO: Delete this and the text above, and describe your gem
+Darko helps you debug.  A great use case for Darko is if you want to know *exactly* when a piece of data is mutated.  Darko allows you to watch objects, spy on their attributes, drop `irb` or `pry` upon mutations, & really help you get to the root of what is going on.
+
+Just like Frank without the bunny suit.
+
 
 ## Installation
 
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'Darko'
+gem 'darko'
 ```
 
 And then execute:
@@ -18,11 +21,30 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install Darko
+    $ gem install darko
 
 ## Usage
 
-TODO: Write usage instructions here
+This is a super simple example with watching an instance of class `Foo`
+
+```ruby
+require 'darko'
+# Some class with something you aren't sure why is changing
+class Foo
+  attr_accessor :data
+  def initialize data
+    @data = data
+  end
+end
+
+an_object = Foo.new
+frank = Darko::Watcher.new(an_object, :@data)
+frank.enable! # this will start the object spy
+
+foo.data += 'yep gonna add this here - this might be occuring in some background thread, some meta programmed method, something magical and mystical that you can\'t easily put a breakpoint on'
+# Darko will output a stack trace showing you exactly WHERE the mutation is occuring, allowing you to figure out the why more easily
+frank.disable! # this will quit spying and put everything back to normal :)
+```
 
 ## Development
 
@@ -32,7 +54,9 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/Darko. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/[USERNAME]/Darko/blob/master/CODE_OF_CONDUCT.md).
+Bug reports and pull requests are welcome on GitHub at https://github.com/prodion23/darko. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/prodion23/darko/blob/master/CODE_OF_CONDUCT.md).
+
+All PR's are welcome :) - before merging you must provide test coverage of the feature.  If you plan to do any extreme rewrites or redesigns please open an issue so we can talk about it.  
 
 
 ## License
@@ -40,5 +64,6 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/[USERN
 The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
 
 ## Code of Conduct
+TL;DR - Be nice to everyone
 
 Everyone interacting in the Darko project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/[USERNAME]/Darko/blob/master/CODE_OF_CONDUCT.md).

@@ -1,7 +1,10 @@
 module Darko
   class Watcher
-    def initialize object, instance_variable
-      raise Darko::Error.new("Attribute #{instance_variable} doesnt exist on #{object}") unless object.instance_variable_get(instance_variable)
+    attr_accessor :delegator
+    def initialize object, instance_variable: nil
+      unless instance_variable .nil?
+        raise Darko::Error.new("Attribute #{instance_variable} doesnt exist on #{object}") unless object.instance_variable_get(instance_variable)
+      end
       @object = object
       @instance_variable = instance_variable
       @delegator = nil
