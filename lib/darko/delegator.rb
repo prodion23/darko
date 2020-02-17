@@ -8,7 +8,9 @@ module Darko
 
     # Anything we want to do on watcher object access do it here
     def called
-      Kernel.puts "Object access or mutation occured: #{Kernel.caller()[1..-1].join("\n")}"
+      stack_without_darko = Kernel.caller(3..-1).join("\n")
+      Kernel.puts "Object access or mutation occurred: "
+      Kernel.puts "#{stack_without_darko}"
     end
   end
 end

@@ -2,20 +2,26 @@ RSpec.describe Darko::Watcher do
   before do
     stub_const('SomeClass', Class.new do
       attr_accessor :data
+
       def initialize data
         @data = data
+      end
+
+      @class_ivar = ''
+      class << self
+        attr_accessor :class_ivar
+      end
+    end)
+
+    stub_const('ClassVariables', Class.new do
+      @@class_var = 0
+      def self.add_instance
+        @@class_var += 1
       end
     end)
   end
 
-  context 'working with an attribute on an instance' do
-    it "can detect an invalid attribute" do
-      an_instance = SomeClass.new('adsf')
-      expect do
-        Darko::Watcher.new(an_instance, :@invalid_instance_variable)
-      end.to raise_error(Darko::Error)
-    end
-
+  context 'instance variables on an instance' do
     it 'can watch a valid attribute' do
       an_instance = SomeClass.new('asf')
       expect do
@@ -32,8 +38,33 @@ RSpec.describe Darko::Watcher do
     end
   end
 
-  context 'watching any changes to an instance' do
-    an_instance = SomeClass.new('asdf')
-    frank = Darko::Watcher.new(an_instance)
+  context 'instance variables on a class' do
+    it 'doesnt raise an error' do
+      expect do
+        Darko::Watcher.new(SomeClass, :@class_ivar).enable!
+      end.to_not raise_error
+    end
+
+    it 'will call when attribute is accessed' do
+      frank = Darko::Watcher.new(SomeClass, :@class_ivar)
+      frank.enable!
+      expect(frank.delegator).to receive(:called).once
+      SomeClass.class_ivar += 'asdfasdf'
+    end
+  end
+
+  context 'class variables' do
+    it 'doesnt raise an error' do
+      expect do
+        Darko::Watcher.new(SomeClass, :@@class_var).enable!
+      end.to_not raise_error
+    end
+
+    it 'will call when attribute is accessed' do
+      frank = Darko::Watcher.new(ClassVariables, :@@class_var)
+      frank.enable!
+      expect(frank.delegator).to receive(:called).once
+      ClassVariables.add_instance
+    end
   end
 end

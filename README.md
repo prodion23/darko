@@ -6,7 +6,6 @@ Darko helps you debug.  A great use case for Darko is if you want to know *exact
 
 Just like Frank without the bunny suit.
 
-
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -37,13 +36,41 @@ class Foo
   end
 end
 
-an_object = Foo.new
+an_object = Foo.new('data')
 frank = Darko::Watcher.new(an_object, :@data)
 frank.enable! # this will start the object spy
 
 foo.data += 'yep gonna add this here - this might be occuring in some background thread, some meta programmed method, something magical and mystical that you can\'t easily put a breakpoint on'
 # Darko will output a stack trace showing you exactly WHERE the mutation is occuring, allowing you to figure out the why more easily
 frank.disable! # this will quit spying and put everything back to normal :)
+```
+
+Darko also works on instance variables of a class
+```ruby
+require 'darko'
+
+frank = Darko::Watcher.new(Foo, :@class_instance_variable)
+frank.enable! # this will start the object spy
+
+Foo.class_instance_variable += 'more_data'
+# Darko will output a stack trace showing you exactly WHERE the mutation is occuring, allowing you to figure out the why more easily
+frank.disable! # this will quit spying and put everything back to normal :)
+```
+
+& on class variables
+```ruby
+class Foo
+  @@class_var = []
+  def self.class_var
+    @@class_var
+  end
+end
+frank = Darko::Watcher.new(Foo, :@@class_var)
+frank.enable! # this will start the object spy
+
+Foo.class_var += 'more_data'
+# Darko will output a stack trace showing you exactly WHERE the mutation is occuring, allowing you to figure out the why more easily
+frank.disable!
 ```
 
 ## Development
