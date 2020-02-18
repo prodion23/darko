@@ -1,6 +1,7 @@
 module Darko
   class Delegator < SimpleDelegator
     alias_method :darko__getobj__, :__getobj__
+    # TODO: Differentiate between access and mutation - this should be a filter passed through the watcher init
     def __getobj__
       called
       darko__getobj__

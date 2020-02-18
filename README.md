@@ -2,7 +2,7 @@
 
 ## 28:06:42:12 
 
-Darko helps you debug.  A great use case for Darko is if you want to know *exactly* when a piece of data is mutated.  Darko allows you to watch objects, spy on their attributes, drop `irb` or `pry` upon mutations, & really help you get to the root of what is going on.
+Darko helps you debug.  A great use case for Darko is if you want to know *exactly* when a piece of data is mutated.  Darko allows you to watch objects, spy on their attributes, drop `irb` or `pry` upon mutations(:TODO), & really help you get to the root of what is going on.
 
 Just like Frank without the bunny suit.
 
