@@ -1,15 +1,14 @@
 module Darko
   class Watcher
     attr_accessor :delegator
-    def initialize object, attribute=nil
+    def initialize object, attribute=nil, log_to_file=false
       @object = object
       @attribute = attribute
-      @delegator = nil
+      @delegator = Darko::Delegator.new(attribute_target, log_to_file)
     end
 
     # Enabling the Darko::Watcher replaces the object with a Darko::Delegator to spy on mutations
     def enable!
-      @delegator = Darko::Delegator.new(attribute_target)
       swap_in_delegator
     end
 
