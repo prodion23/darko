@@ -50,6 +50,14 @@ frank = Darko::Watcher.new(an_object, :@data, true).enable!
 
 ```
 
+Another use case is if you are debugging some unfamiliar code, you may be trying to determine _where_ something is being initialized at.
+You can use an ehancement for this.
+
+```ruby
+some_object
+puts some_object.initialized_at => stacktrace showing origin
+```
+
 ## TODO
  - Darko::Configuration class
  - figure out how to follow object reassignment
